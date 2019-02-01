@@ -1202,6 +1202,7 @@ class Heap:
     父节点为i/2的节点
 
     """
+
     def __init__(self, cap=10):
         """
 
@@ -1234,6 +1235,96 @@ class Heap:
         print('heap: {}'.format(self.heap))
 
 
+class Graph:
+    """
+    图：无向
+    """
+
+    def __init__(self):
+        self.v = {}
+
+    def add_edge(self, s, t):
+        """
+        无向图边
+        :param s:
+        :param t:
+        :return:
+        """
+        if s not in self.v:
+            self.v[s] = []
+        self.v[s].append(t)
+
+        # 如果是有向图注释下面的代码
+        if t not in self.v:
+            self.v[t] = []
+
+        self.v[t].append(s)
+
+    def find_path(self, graph, start, end, path=[]):
+        """
+        找路径
+        :param start:
+        :param end:
+        :param path:
+        :return:
+        """
+        path = path + [start]
+        if start == end:
+            return path
+        if start not in graph:
+            return None
+
+        tmp_path = []
+        for node in graph[start]:
+            if node not in path:
+                new_path = self.find_path(graph, node, end, path)
+                if end in new_path:
+                    return new_path
+
+        return path
+
+    def dfs(self, graph, s, path=None):
+        """
+        递归 深度优先
+        :param graph:
+        :param s:
+        :param path:
+        :return:
+        """
+        if path is None:
+            path = []
+
+        path.append(s)
+        for u in graph[s]:
+            if u in path:
+                continue
+            print(u)
+            self.dfs(graph, u, path)
+
+        return path
+
+    def run(self):
+        self.add_edge('A', 'B')
+        self.add_edge('A', 'C')
+        self.add_edge('B', 'C')
+        self.add_edge('B', 'D')
+        self.add_edge('C', 'D')
+        self.add_edge('C', 'F')
+        self.add_edge('F', 'E')
+        print(self.v)
+        # graph = {'A': ['B', 'C'],
+        #          'B': ['C', 'D'],
+        #          'C': ['D'],
+        #          'D': ['C'],
+        #          'E': ['F'],
+        #          'F': ['C']}
+        graph = self.v
+        p = self.find_path(graph, 'A', 'R')
+        print('path: {}'.format(p))
+        p = []
+        self.dfs(graph, 'A', p)
+        print('dfs path: {}'.format(p))
+
 
 def runner(inst):
     """
@@ -1262,4 +1353,5 @@ if __name__ == '__main__':
     # runner(QuickSort)
     # runner(BinFind)
     # runner(BinTree)
-    runner(Heap)
+    # runner(Heap)
+    runner(Graph)
